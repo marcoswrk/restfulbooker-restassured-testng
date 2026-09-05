@@ -2,16 +2,20 @@
 <testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2026-09-05T17:26:41 BRT" name="Surefire suite" finished-at="2026-09-05T17:26:46 BRT" duration-ms="4758">
+  <suite started-at="2026-09-05T18:24:14 BRT" name="Surefire suite" finished-at="2026-09-05T18:24:20 BRT" duration-ms="6174">
     <groups>
     </groups>
-    <test started-at="2026-09-05T17:26:41 BRT" name="Surefire test" finished-at="2026-09-05T17:26:46 BRT" duration-ms="4758">
-      <class name="RestfulBooker">
-        <test-method signature="getPing()[pri:0, instance:RestfulBooker@797badd3]" started-at="2026-09-05T17:26:41 BRT" name="getPing" finished-at="2026-09-05T17:26:46 BRT" duration-ms="4680" status="PASS">
+    <test started-at="2026-09-05T18:24:14 BRT" name="Surefire test" finished-at="2026-09-05T18:24:20 BRT" duration-ms="6174">
+      <class name="tests.AuthTest">
+        <test-method is-config="true" signature="setup()[pri:0, instance:tests.AuthTest@4d826d77]" started-at="2026-09-05T18:24:14 BRT" name="setup" finished-at="2026-09-05T18:24:14 BRT" duration-ms="692" status="PASS">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- getPing -->
-      </class> <!-- RestfulBooker -->
+        </test-method> <!-- setup -->
+        <test-method signature="getAuth()[pri:0, instance:tests.AuthTest@4d826d77]" started-at="2026-09-05T18:24:14 BRT" name="getAuth" finished-at="2026-09-05T18:24:20 BRT" duration-ms="5405" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getAuth -->
+      </class> <!-- tests.AuthTest -->
     </test> <!-- Surefire test -->
   </suite> <!-- Surefire suite -->
 </testng-results>

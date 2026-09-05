@@ -1,1 +1,4 @@
-C:\Users\User\Downloads\rest-assured-api-test\rest\src\test\java\RestfulBooker.java
+C:\Users\User\Downloads\rest-assured-api-test\rest\src\test\java\base\BaseTest.java
+C:\Users\User\Downloads\rest-assured-api-test\rest\src\test\java\tests\AuthTest.java
+C:\Users\User\Downloads\rest-assured-api-test\rest\src\test\java\tests\BookingTest.java
+C:\Users\User\Downloads\rest-assured-api-test\rest\src\test\java\tests\PingTest.java
