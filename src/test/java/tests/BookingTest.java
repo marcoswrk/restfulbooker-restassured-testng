@@ -1,7 +1,7 @@
 package tests;
 
 import base.BaseTest;
-import io.restassured.RestAssured;
+import model.BookingModel;
 import org.testng.annotations.*;
 import static io.restassured.RestAssured.*;
 import api.AuthApi;
@@ -11,137 +11,143 @@ public class BookingTest extends BaseTest {
 
     @BeforeMethod
     public void postBookingForUpdate() {
+        BookingModel.BookingDatesModel dates = new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12");
+        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, "Breakfast", dates);
         bookingId = given()
-                .contentType("application/json")
-                .body("{\"firstname\": \"Teste\", \"lastname\": \"Teste\", \"totalprice\": 123, \"depositpaid\": true, \"bookingdates\": {\"checkin\": \"2026-09-01\", \"checkout\": \"2026-09-12\"}, \"additionalneeds\": \"Breakfast\"}")
-                .when()
-                .post("/booking")
-                .then()
-                .statusCode(200)
-                .log().all()
-                .extract().path("bookingid");
+                .body(booking)
+        .when()
+            .post("/booking")
+        .then()
+            .statusCode(200)
+            .log().all()
+            .extract().path("bookingid");
 
     }
 
     @Test
     public void postBooking() {
-             given()
-            .contentType("application/json")
-            .body("{\"firstname\": \"Teste\", \"lastname\": \"Teste\", \"totalprice\": 123, \"depositpaid\": true, \"bookingdates\": {\"checkin\": \"2026-09-01\", \"checkout\": \"2026-09-12\"}, \"additionalneeds\": \"Breakfast\"}")
-            .when()
-                .post("/booking")
-            .then()
-                .statusCode(200)
-                .log().all()
-        ;
+        BookingModel.BookingDatesModel dates = new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12");
+        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, "Breakfast", dates);
+        given()
+            .body(booking)
+        .when()
+            .post("/booking")
+        .then()
+            .statusCode(200)
+            .log().all();
     }
 
     @Test
     public void getCreatedBooking() {
         given()
-                .contentType("application/json")
-                .get("/booking/" + bookingId)
-                .then()
-                    .statusCode(200)
-                    .log().all()
-        ;
+        .when()
+            .get("/booking/" + bookingId)
+        .then()
+            .statusCode(200)
+            .log().all();
     }
 
     @Test
     public void putBooking() {
+        BookingModel.BookingDatesModel dates = new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12");
+        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, "Breakfast", dates);
         String token =  AuthApi.generateToken();
         given()
-                .contentType("application/json")
-                .header("Cookie", "token=" + token)
-                .body("{\"firstname\": \"Teste\", \"lastname\": \"Update\", \"totalprice\": 123, \"depositpaid\": true, \"bookingdates\": {\"checkin\": \"2026-09-01\", \"checkout\": \"2026-09-12\"}, \"additionalneeds\": \"Breakfast\"}")
-                .when()
-                .log().all()
-                .put("/booking/" + bookingId)
-                .then()
-                .statusCode(200)
-                .log().all()
-        ;
+            .header("Cookie", "token=" + token)
+            .body(booking)
+        .when()
+            .log().all()
+            .put("/booking/" + bookingId)
+        .then()
+            .statusCode(200)
+            .log().all();
     }
 
     @Test
     public void patchBooking() {
         String token = AuthApi.generateToken();
+        BookingModel.BookingDatesModel dates = new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12");
+        BookingModel booking = new BookingModel("Teste", "Patch", 123, true, "Breakfast", dates);
         given()
-                .contentType("application/json")
-                .header("Cookie", "token=" + token)
-                .body("{\"firstname\": \"Teste\", \"lastname\": \"Patch\", \"totalprice\": 123, \"depositpaid\": true, \"bookingdates\": {\"checkin\": \"2026-09-01\", \"checkout\": \"2026-09-12\"}, \"additionalneeds\": \"Breakfast\"}")
-                .when()
-                .patch("/booking/" + bookingId)
-                .then()
-                .statusCode(200)
-                .log().all();
+            .header("Cookie", "token=" + token)
+            .body(booking)
+        .when()
+            .patch("/booking/" + bookingId)
+        .then()
+            .statusCode(200)
+            .log().all();
     }
 
     @Test
     public void deleteBookingAndGetDeletionConfirmation() {
         String token = AuthApi.generateToken();
         given()
-                .contentType("application/json")
-                .header("Cookie", "token=" + token)
-                .when()
-                .delete("/booking/" + bookingId)
-                .then()
-                .statusCode(201)
-                .log().all();
+            .header("Cookie", "token=" + token)
+        .when()
+            .delete("/booking/" + bookingId)
+        .then()
+             .statusCode(201)
+             .log().all();
 
         given()
-                .contentType("application/json")
-                .when()
-                .get("/booking/" + bookingId)
-                .then()
-                .statusCode(404)
-                .log().all();
+        .when()
+            .get("/booking/" + bookingId)
+        .then()
+            .statusCode(404)
+            .log().all();
     }
     //booking filters
     @Test
+    public void getBookingById() {
+        given()
+                .pathParam("bookingId", 122)
+        .when()
+            .get("/booking/{bookingId}")
+        .then()
+            .statusCode(200)
+            .log().all();
+    }
+
+    @Test
     public void getAllBookings() {
         given()
-                .contentType("application/json")
-                .when()
-                .get("/booking")
-                .then()
-                .statusCode(200);
+        .when()
+            .get("/booking")
+        .then()
+            .statusCode(200);
     }
     @Test
     public void getBookingByNameAndLastName() {
         given()
-                .contentType("application/json")
-                .queryParam("firstname", "Teste")
-                .queryParam("lastname", "Teste")
-                .when()
-                .get("/booking")
-                .then()
-                .statusCode(200)
-                .log().all();
+             .queryParam("firstname", "Teste")
+             .queryParam("lastname", "Teste")
+        .when()
+              .get("/booking")
+        .then()
+             .statusCode(200)
+             .log().all();
     }
     @Test
     public void getBookingByCheckInAndCheckOut() {
         given()
-                .contentType("application/json")
-                .queryParam("checkin", "2026-09-01")
-                .queryParam("checkout", "2026-09-12")
-                .when()
-                .get("/booking")
-                .then()
-                .statusCode(200)
-                .log().all();
+            .queryParam("checkin", "2026-09-01")
+            .queryParam("checkout", "2026-09-12")
+        .when()
+           .get("/booking")
+        .then()
+           .statusCode(200)
+           .log().all();
     }
 
     @Test
     public void getInvalidDateBooking() {
         given()
-                .contentType("application/json")
-                .queryParam("checkin", "1923009-01")
-                .queryParam("checkout", "2026-09-12")
-                .when()
-                .get("/booking")
-                .then()
-                .statusCode(500)
-                .log().all();
+             .queryParam("checkin", "1923009-01")
+             .queryParam("checkout", "2026-09-12")
+        .when()
+            .get("/booking")
+        .then()
+            .statusCode(500)
+            .log().all();
     }
 }
