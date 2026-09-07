@@ -4,6 +4,7 @@ import base.BaseTest;
 import net.minidev.json.JSONObject;
 import static org.hamcrest.Matchers.equalTo;
 import static io.restassured.RestAssured.*;
+import api.AuthApi;
 
 
 public class AuthTest extends BaseTest {

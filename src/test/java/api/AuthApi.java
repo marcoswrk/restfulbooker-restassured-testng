@@ -3,6 +3,7 @@ package api;
 import static io.restassured.RestAssured.given;
 
 import net.minidev.json.JSONObject;
+import api.AuthApi;
 
 public class AuthApi {
 
