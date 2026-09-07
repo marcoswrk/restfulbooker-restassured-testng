@@ -5,6 +5,7 @@ import model.BookingModel;
 import org.testng.annotations.*;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
+import api.BookingApi;
 
 import api.AuthApi;
 
@@ -14,10 +15,8 @@ public class BookingTest extends BaseTest {
     @BeforeMethod
     public void postBookingForUpdate() {
         BookingModel booking = new BookingModel("Teste", "Teste", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
-        bookingId = given()
-                .body(booking)
-        .when()
-            .post("/booking")
+
+        bookingId = BookingApi.createBooking(booking)
         .then()
             .statusCode(200)
             .log().all()
@@ -28,38 +27,28 @@ public class BookingTest extends BaseTest {
     @Test
     public void postBooking() {
         BookingModel booking = new BookingModel("Teste", "Teste", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
-        given()
-            .body(booking)
-        .when()
-            .post("/booking")
-        .then()
+
+        BookingApi.createBooking(booking)
+            .then()
             .statusCode(200)
             .log().all();
     }
 
     @Test
     public void getCreatedBooking() {
-        given()
-                .pathParam("bookingId", bookingId)
-        .when()
-            .get("/booking/{bookingId}")
+        BookingApi.getBooking(bookingId)
         .then()
             .statusCode(200)
-                .body("firstname", equalTo("Teste"))
-
+            .body("firstname", equalTo("Teste"))
             .log().all();
     }
 
     @Test
     public void putBooking() {
         BookingModel booking = new BookingModel("Teste", "Teste", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
+
         String token =  AuthApi.generateToken();
-        given()
-            .header("Cookie", "token=" + token)
-            .body(booking)
-        .when()
-            .log().all()
-            .put("/booking/" + bookingId)
+        BookingApi.updateBooking(bookingId, booking, token)
         .then()
             .statusCode(200)
             .log().all();
@@ -67,13 +56,10 @@ public class BookingTest extends BaseTest {
 
     @Test
     public void patchBooking() {
-        String token = AuthApi.generateToken();
         BookingModel booking = new BookingModel("Teste", "Patch", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
-        given()
-            .header("Cookie", "token=" + token)
-            .body(booking)
-        .when()
-            .patch("/booking/" + bookingId)
+
+        String token = AuthApi.generateToken();
+        BookingApi.patchBooking(bookingId, booking, token)
         .then()
             .statusCode(200)
             .log().all();
@@ -82,17 +68,12 @@ public class BookingTest extends BaseTest {
     @Test
     public void deleteBookingAndGetDeletionConfirmation() {
         String token = AuthApi.generateToken();
-        given()
-            .header("Cookie", "token=" + token)
-        .when()
-            .delete("/booking/" + bookingId)
+        BookingApi.deleteBooking(bookingId, token)
         .then()
              .statusCode(201)
              .log().all();
-
-        given()
-        .when()
-            .get("/booking/" + bookingId)
+        //Confirmation by getting the deleted booking id
+        BookingApi.getBooking(bookingId)
         .then()
             .statusCode(404)
             .log().all();
@@ -100,30 +81,20 @@ public class BookingTest extends BaseTest {
     //booking filters
     @Test
     public void getAllBookings() {
-        given()
-        .when()
-            .get("/booking")
-        .then()
+        BookingApi.getAllBookings()
+            .then()
             .statusCode(200);
     }
     @Test
     public void getBookingByNameAndLastName() {
-        given()
-             .queryParam("firstname", "Teste")
-             .queryParam("lastname", "Teste")
-        .when()
-              .get("/booking")
+       BookingApi.getBookingByFilter("Teste", "Teste")
         .then()
              .statusCode(200)
              .log().all();
     }
     @Test
     public void getBookingByCheckInAndCheckOut() {
-        given()
-            .queryParam("checkin", "2026-09-01")
-            .queryParam("checkout", "2026-09-12")
-        .when()
-           .get("/booking")
+       BookingApi.getBookingByCheckinCheckout("2026-09-01", "2026-09-12")
         .then()
            .statusCode(200)
            .log().all();
@@ -131,12 +102,8 @@ public class BookingTest extends BaseTest {
 
     @Test
     public void getInvalidDateBooking() {
-        given()
-             .queryParam("checkin", "1923009-01")
-             .queryParam("checkout", "2026-09-12")
-        .when()
-            .get("/booking")
-        .then()
+        BookingApi.getBookingByCheckinCheckout("1923009-01", "2026-09-12")
+            .then()
             .statusCode(500)
             .log().all();
     }
