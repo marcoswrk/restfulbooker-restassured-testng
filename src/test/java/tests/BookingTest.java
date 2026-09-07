@@ -3,20 +3,20 @@ package tests;
 import base.BaseTest;
 import model.BookingModel;
 import org.testng.annotations.*;
-import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
 import api.BookingApi;
-
+import utils.TestData;
 import api.AuthApi;
 
 public class BookingTest extends BaseTest {
     private int bookingId;
+    private BookingModel createdBooking;
 
     @BeforeMethod
     public void postBookingForUpdate() {
-        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
+        createdBooking = TestData.randomBooking();
 
-        bookingId = BookingApi.createBooking(booking)
+        bookingId = BookingApi.createBooking(createdBooking)
         .then()
             .statusCode(200)
             .log().all()
@@ -26,7 +26,7 @@ public class BookingTest extends BaseTest {
 
     @Test
     public void postBooking() {
-        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
+        BookingModel booking = TestData.randomBooking();
 
         BookingApi.createBooking(booking)
             .then()
@@ -39,16 +39,16 @@ public class BookingTest extends BaseTest {
         BookingApi.getBooking(bookingId)
         .then()
             .statusCode(200)
-            .body("firstname", equalTo("Teste"))
+            .body("firstname", equalTo(createdBooking.getFirstname()))
             .log().all();
     }
 
     @Test
     public void putBooking() {
-        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
-
         String token =  AuthApi.generateToken();
-        BookingApi.updateBooking(bookingId, booking, token)
+        BookingModel updated = TestData.randomBooking();
+
+        BookingApi.updateBooking(bookingId, updated, token)
         .then()
             .statusCode(200)
             .log().all();
@@ -56,10 +56,10 @@ public class BookingTest extends BaseTest {
 
     @Test
     public void patchBooking() {
-        BookingModel booking = new BookingModel("Teste", "Patch", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
-
         String token = AuthApi.generateToken();
-        BookingApi.patchBooking(bookingId, booking, token)
+        BookingModel patch = TestData.randomBooking();
+
+        BookingApi.patchBooking(bookingId, patch, token)
         .then()
             .statusCode(200)
             .log().all();
@@ -70,8 +70,8 @@ public class BookingTest extends BaseTest {
         String token = AuthApi.generateToken();
         BookingApi.deleteBooking(bookingId, token)
         .then()
-             .statusCode(201)
-             .log().all();
+             .statusCode(201);
+
         //Confirmation by getting the deleted booking id
         BookingApi.getBooking(bookingId)
         .then()
@@ -87,14 +87,16 @@ public class BookingTest extends BaseTest {
     }
     @Test
     public void getBookingByNameAndLastName() {
-       BookingApi.getBookingByFilter("Teste", "Teste")
+       BookingApi.getBookingByFilter(createdBooking.getFirstname(), createdBooking.getLastname())
         .then()
              .statusCode(200)
              .log().all();
     }
     @Test
     public void getBookingByCheckInAndCheckOut() {
-       BookingApi.getBookingByCheckinCheckout("2026-09-01", "2026-09-12")
+       BookingApi.getBookingByFilter(
+               createdBooking.getBookingdates().getCheckin(),
+               createdBooking.getBookingdates().getCheckout())
         .then()
            .statusCode(200)
            .log().all();

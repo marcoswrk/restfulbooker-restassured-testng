@@ -40,6 +40,7 @@ public class BookingApi {
     public static Response updateBooking(int bookingId, BookingModel booking, String token) {
         return given()
                 .header("Cookie", "token=" + token)
+                .pathParam("bookingId", bookingId)
                 .body(booking)
                 .when()
                 .put("/booking/{bookingId}");
@@ -47,6 +48,7 @@ public class BookingApi {
     public static Response patchBooking(int bookingId, BookingModel booking, String token) {
         return given()
                 .header("Cookie", "token=" + token)
+                .pathParam("bookingId", bookingId)
                 .body(booking)
                 .when()
                 .patch("/booking/{bookingId}");
