@@ -1,4 +1,4 @@
-# Automacao RestAssured com TestNG
+# Automação RestAssured com TestNG
 
 Este projeto contém testes automatizados para a API pública de reservas [Restful Booker](https://restful-booker.herokuapp.com/apidoc/index.html), implementados em Java com RestAssured e TestNG.
 
