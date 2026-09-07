@@ -4,6 +4,8 @@ import base.BaseTest;
 import model.BookingModel;
 import org.testng.annotations.*;
 import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.equalTo;
+
 import api.AuthApi;
 
 public class BookingTest extends BaseTest {
@@ -11,8 +13,7 @@ public class BookingTest extends BaseTest {
 
     @BeforeMethod
     public void postBookingForUpdate() {
-        BookingModel.BookingDatesModel dates = new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12");
-        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, "Breakfast", dates);
+        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
         bookingId = given()
                 .body(booking)
         .when()
@@ -26,8 +27,7 @@ public class BookingTest extends BaseTest {
 
     @Test
     public void postBooking() {
-        BookingModel.BookingDatesModel dates = new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12");
-        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, "Breakfast", dates);
+        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
         given()
             .body(booking)
         .when()
@@ -40,17 +40,19 @@ public class BookingTest extends BaseTest {
     @Test
     public void getCreatedBooking() {
         given()
+                .pathParam("bookingId", bookingId)
         .when()
-            .get("/booking/" + bookingId)
+            .get("/booking/{bookingId}")
         .then()
             .statusCode(200)
+                .body("firstname", equalTo("Teste"))
+
             .log().all();
     }
 
     @Test
     public void putBooking() {
-        BookingModel.BookingDatesModel dates = new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12");
-        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, "Breakfast", dates);
+        BookingModel booking = new BookingModel("Teste", "Teste", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
         String token =  AuthApi.generateToken();
         given()
             .header("Cookie", "token=" + token)
@@ -66,8 +68,7 @@ public class BookingTest extends BaseTest {
     @Test
     public void patchBooking() {
         String token = AuthApi.generateToken();
-        BookingModel.BookingDatesModel dates = new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12");
-        BookingModel booking = new BookingModel("Teste", "Patch", 123, true, "Breakfast", dates);
+        BookingModel booking = new BookingModel("Teste", "Patch", 123, true, new BookingModel.BookingDatesModel("2026-09-01", "2026-09-12"), "Breakfast");
         given()
             .header("Cookie", "token=" + token)
             .body(booking)
@@ -97,17 +98,6 @@ public class BookingTest extends BaseTest {
             .log().all();
     }
     //booking filters
-    @Test
-    public void getBookingById() {
-        given()
-                .pathParam("bookingId", 122)
-        .when()
-            .get("/booking/{bookingId}")
-        .then()
-            .statusCode(200)
-            .log().all();
-    }
-
     @Test
     public void getAllBookings() {
         given()
