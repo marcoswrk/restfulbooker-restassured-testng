@@ -18,7 +18,6 @@ Validar o comportamento da API de autenticação e gerenciamento de reservas, co
 - TestNG
 - RestAssured
 - Jackson
-- Lombok
 - DataFaker
 
 ## Estrutura

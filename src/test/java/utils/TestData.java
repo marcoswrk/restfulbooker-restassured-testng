@@ -1,11 +1,12 @@
 package utils;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import net.datafaker.Faker;
 
-import java.awt.print.Book;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 import model.BookingModel;
+@JsonInclude(JsonInclude.Include.NON_NULL)
 
 public class TestData {
     private static final Faker faker = new Faker();
@@ -43,17 +44,28 @@ public class TestData {
     return faker.food().dish();
     }
 
+    public static BookingModel.BookingDatesModel  randomBookingDates() {
+        LocalDate checkin = LocalDate.now().plusDays(faker.number().numberBetween(1, 30));
+        LocalDate checkout = checkin.plusDays(faker.number().numberBetween(1, 14));
+        return new BookingModel.BookingDatesModel(
+                checkin.format(FORMATTER), checkout.format(FORMATTER));
+    }
     public static BookingModel randomBooking() {
-        String checkin = bookingCheckinDate();
-        String checkout = bookingCheckoutDate(checkin);
-
         return new BookingModel(
                 getFirstName(),
                 getLastName(),
                 getTotalPrice(),
                 isDepositPaid(),
-                new BookingModel.BookingDatesModel(checkin, checkout),
-                additionalNeeds()
-        );
+                randomBookingDates(),
+                additionalNeeds());
+    }
+    public static BookingModel randomFirstNamePatch(String currentFirstName) {
+        String newName = getFirstName();
+        while (newName.equals(currentFirstName)) {
+            newName = getFirstName();
+        }
+        BookingModel patch = new BookingModel();
+        patch.setFirstname(newName);
+        return patch;
     }
 }

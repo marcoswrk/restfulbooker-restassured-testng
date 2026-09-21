@@ -3,10 +3,16 @@ package tests;
 import base.BaseTest;
 import model.BookingModel;
 import org.testng.annotations.*;
+
+import static java.lang.Math.log;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+
 import api.BookingApi;
 import utils.TestData;
 import api.AuthApi;
+
+import java.time.LocalDate;
 
 public class BookingTest extends BaseTest {
     private int bookingId;
@@ -24,15 +30,7 @@ public class BookingTest extends BaseTest {
 
     }
 
-    @Test
-    public void postBooking() {
-        BookingModel booking = TestData.randomBooking();
 
-        BookingApi.createBooking(booking)
-            .then()
-            .statusCode(200)
-            .log().all();
-    }
 
     @Test
     public void getCreatedBooking() {
@@ -51,18 +49,27 @@ public class BookingTest extends BaseTest {
         BookingApi.updateBooking(bookingId, updated, token)
         .then()
             .statusCode(200)
+                .body("firstname", equalTo(updated.getFirstname()))
+                .body("lastname", equalTo(updated.getLastname()))
             .log().all();
     }
 
     @Test
     public void patchBooking() {
         String token = AuthApi.generateToken();
-        BookingModel patch = TestData.randomBooking();
+        BookingModel patch = TestData.randomFirstNamePatch(createdBooking.getFirstname());
 
         BookingApi.patchBooking(bookingId, patch, token)
-        .then()
-            .statusCode(200)
-            .log().all();
+                .then()
+                .statusCode(200)
+                .body("firstname", equalTo(patch.getFirstname()))
+                .body("lastname", equalTo(createdBooking.getLastname()));
+
+        BookingApi.getBooking(bookingId)
+                .then()
+                .statusCode(200)
+                .body("firstname", equalTo(patch.getFirstname()))
+                .body("lastname", equalTo(createdBooking.getLastname()));
     }
 
     @Test
@@ -90,16 +97,20 @@ public class BookingTest extends BaseTest {
        BookingApi.getBookingByFilter(createdBooking.getFirstname(), createdBooking.getLastname())
         .then()
              .statusCode(200)
+             .body("bookingid", hasItem(bookingId))
              .log().all();
     }
+
     @Test
     public void getBookingByCheckInAndCheckOut() {
-       BookingApi.getBookingByFilter(
-               createdBooking.getBookingdates().getCheckin(),
-               createdBooking.getBookingdates().getCheckout())
-        .then()
-           .statusCode(200)
-           .log().all();
+        LocalDate checkin = LocalDate.parse(createdBooking.getBookingdates().getCheckin());
+        LocalDate checkout = LocalDate.parse(createdBooking.getBookingdates().getCheckout());
+                BookingApi.getBookingByCheckinCheckout(
+                        checkin.minusDays(1).toString(),
+                        checkout.plusDays(1).toString())
+                .then()
+                .statusCode(200)
+                .body("bookingid", hasItem(bookingId));
     }
 
     @Test
