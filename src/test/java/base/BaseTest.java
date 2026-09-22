@@ -1,11 +1,16 @@
 package base;
-import org.testng.annotations.BeforeClass;
 
+import org.testng.annotations.BeforeSuite;
 
 public class BaseTest {
-    @BeforeClass
-    public void setup() {
 
+    static {
+        System.setProperty("jsse.enableSNIExtension", "false");
+    }
+
+    @BeforeSuite
+    public void setupSuite() {
+
+        System.setProperty("jsse.enableSNIExtension", "false");
     }
 }
-

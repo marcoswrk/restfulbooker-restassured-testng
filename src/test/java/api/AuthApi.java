@@ -9,7 +9,8 @@ import static io.restassured.RestAssured.given;
 public class AuthApi {
 
     public static String generateToken() {
-        return given(Specs.withJsonBody())
+        // Alterado de Specs.withJsonBody() para Specs.requestSpec() para injetar os headers anti-bot
+        return given(Specs.requestSpec())
                 .body(Map.of("username", "admin", "password", "password123"))
                 .when()
                 .post("/auth")
@@ -19,7 +20,8 @@ public class AuthApi {
     }
 
     public static Response authenticate(String username, String password) {
-        return given(Specs.withJsonBody())
+        // Alterado de Specs.withJsonBody() para Specs.requestSpec() para injetar os headers anti-bot
+        return given(Specs.requestSpec())
                 .body(Map.of("username", username, "password", password))
                 .when()
                 .post("/auth");

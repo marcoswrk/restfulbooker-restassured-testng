@@ -2,42 +2,21 @@ package specs;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
-import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 
 public class Specs {
 
-    private Specs() {}
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
-    public static RequestSpecification base() {
+    public static RequestSpecification requestSpec() {
         return new RequestSpecBuilder()
                 .setBaseUri("https://restful-booker.herokuapp.com")
-                .setAccept(ContentType.JSON)
-                .addHeader("User-Agent", "restfulbooker-portfolio-tests/1.0")
-                .log(LogDetail.URI)
-                .build();
-    }
-
-    public static RequestSpecification withJsonBody() {
-        return new RequestSpecBuilder()
-                .addRequestSpecification(base())
+                .setRelaxedHTTPSValidation()
                 .setContentType(ContentType.JSON)
-                .build();
-    }
-
-    public static RequestSpecification authenticated(String token) {
-        return new RequestSpecBuilder()
-                .addRequestSpecification(base())
-                .addCookie("token", token)
-                .build();
-    }
-
-    public static RequestSpecification authenticatedWithJsonBody(String token) {
-        return new RequestSpecBuilder()
-                .addRequestSpecification(withJsonBody())
-                .addCookie("token", token)
+                .addHeader("Accept", "application/json")
+                .addHeader("User-Agent", USER_AGENT)
                 .build();
     }
 

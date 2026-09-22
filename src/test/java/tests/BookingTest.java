@@ -97,9 +97,12 @@ public class BookingTest extends BaseTest {
     @Test
     public void getAllBookings() {
         BookingApi.getAllBookings()
-            .then()
-            .spec(Specs.okJson()).log().ifValidationFails();
+                .then()
+                .statusCode(200)
+                .contentType(io.restassured.http.ContentType.JSON)
+                .log().ifValidationFails();
     }
+
     @Test
     public void getBookingByNameAndLastName() {
        BookingApi.getBookingByFilter(createdBooking.getFirstname(), createdBooking.getLastname())
