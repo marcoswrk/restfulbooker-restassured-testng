@@ -32,7 +32,7 @@ public class BookingTest extends BaseTest {
             }
             tentativas++;
             if (tentativas >= 3) {
-                response.then().statusCode(200); // força a falha real, com a mensagem do RestAssured
+                response.then().statusCode(200);
             }
             try { Thread.sleep(500); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
         }

@@ -53,8 +53,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.4</version>
                 <configuration>
-                    <!-- Injeta o parâmetro de SSL em todos os forks/processos de teste criados pelo Maven -->
-                    <argLine>-Djsse.enableSNIExtension=false</argLine>
+
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>

@@ -27,22 +27,32 @@ restfulbooker-restassured-testng/
 ├── pom.xml
 ├── README.md
 ├── src/
-│   ├── main/java/com/rest/project/Main.java
-│   └── test/java/
-│       ├── api/
-│       │   ├── AuthApi.java
-│       │   └── BookingApi.java
-│       ├── base/
-│       │   └── BaseTest.java
-│       ├── model/
-│       │   └── BookingModel.java
-│       ├── tests/
-│       │   ├── AuthTest.java
-│       │   ├── BookingTest.java
-│       │   └── PingTest.java
-│       └── utils/
-│           └── TestData.java
-└── target/ (gerado pela execução dos testes)
+│   ├── main/
+│   │   └── java/com/rest/project/
+│   │       └── Main.java
+│   └── test/
+│       ├── java/
+│       │   ├── api/
+│       │   │   ├── AuthApi.java
+│       │   │   └── BookingApi.java
+│       │   ├── base/
+│       │   │   └── BaseTest.java
+│       │   ├── model/
+│       │   │   └── BookingModel.java
+│       │   ├── specs/
+│       │   │   └── Specs.java
+│       │   ├── tests/
+│       │   │   ├── AuthTest.java
+│       │   │   ├── BookingCreateTest.java
+│       │   │   ├── BookingTest.java
+│       │   │   └── PingTest.java
+│       │   └── utils/
+│       │       ├── RateLimitRetryAnalyzer.java
+│       │       ├── RetryListener.java
+│       │       └── TestData.java
+│       └── resources/
+│           └── testng.xml
+└── target/ (gerado pelo Maven; não versionado)
 ```
 
 ## Casos de teste cobertos
@@ -84,5 +94,3 @@ restfulbooker-restassured-testng/
 
 - JDK 17+
 - Maven 3.8+
-## Obs
-- A API pode responder 418 sob rajada de requisições; a suíte usa rerun para absorver essa instabilidade.

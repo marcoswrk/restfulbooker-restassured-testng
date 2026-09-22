@@ -8,12 +8,11 @@ import io.restassured.specification.ResponseSpecification;
 
 public class Specs {
 
-    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+    private static final String USER_AGENT = "restfulbooker-portfolio-tests/1.0";
 
     public static RequestSpecification requestSpec() {
         return new RequestSpecBuilder()
                 .setBaseUri("https://restful-booker.herokuapp.com")
-                .setRelaxedHTTPSValidation()
                 .setContentType(ContentType.JSON)
                 .addHeader("Accept", "application/json")
                 .addHeader("User-Agent", USER_AGENT)
