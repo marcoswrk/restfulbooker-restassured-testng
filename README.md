@@ -84,3 +84,5 @@ restfulbooker-restassured-testng/
 
 - JDK 25+
 - Maven 3.8+
+## Obs
+- A API pode responder 418 sob rajada de requisições; a suíte usa rerun para absorver essa instabilidade.
