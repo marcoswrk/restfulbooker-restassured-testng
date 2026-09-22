@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.notNullValue;
 public class BookingCreateTest  extends BaseTest {
     private Integer createdId;
 
-    @Test
+    @Test(retryAnalyzer = utils.RateLimitRetryAnalyzer.class)
     public void postBooking() {
         BookingModel booking = TestData.randomBooking();
         Response response = BookingApi.createBooking(booking);
@@ -40,7 +40,7 @@ public class BookingCreateTest  extends BaseTest {
     @AfterMethod(alwaysRun = true)
     public void cleanup() {
         if (createdId != null) {
-            BookingApi.deleteBooking(createdId, AuthApi.generateToken()); // sem assert
+            BookingApi.deleteBooking(createdId, AuthApi.generateToken());
             createdId = null;
         }
     }

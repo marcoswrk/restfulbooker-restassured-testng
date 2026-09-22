@@ -1,0 +1,10 @@
+<suite name="RestfulBookerSuite">
+    <listeners>
+        <listener class-name="utils.RetryListener"/>
+    </listeners>
+    <test name="AllTests">
+        <packages>
+            <package name="tests"/>
+        </packages>
+    </test>
+</suite>

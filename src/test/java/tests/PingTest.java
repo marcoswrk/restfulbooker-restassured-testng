@@ -1,15 +1,20 @@
 package tests;
 import org.testng.annotations.Test;
 import base.BaseTest;
+import specs.Specs;
 
 import static io.restassured.RestAssured.*;
 
 
 public class PingTest extends BaseTest {
-      @Test
+    @Test
     public void getPing() {
-        get ("/ping").then().statusCode(201).log().all();
-        
+        given(Specs.base())
+                .when()
+                .get("/ping")
+                .then()
+                .statusCode(201);
     }
-
 }
+
+
