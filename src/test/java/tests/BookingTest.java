@@ -4,12 +4,10 @@ import base.BaseTest;
 import model.BookingModel;
 import org.testng.annotations.*;
 
-import static java.lang.Math.log;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 
 import api.BookingApi;
-import specs.Specs;
 import utils.TestData;
 import api.AuthApi;
 

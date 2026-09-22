@@ -13,7 +13,7 @@ Validar o comportamento da API de autenticação e gerenciamento de reservas, co
 
 ## Stack
 
-- Java 25
+- Java 17
 - Maven
 - TestNG
 - RestAssured
@@ -82,7 +82,7 @@ restfulbooker-restassured-testng/
 
 ## Requisitos
 
-- JDK 25+
+- JDK 17+
 - Maven 3.8+
 ## Obs
 - A API pode responder 418 sob rajada de requisições; a suíte usa rerun para absorver essa instabilidade.
